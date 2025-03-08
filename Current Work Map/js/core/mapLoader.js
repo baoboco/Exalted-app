@@ -182,15 +182,19 @@ class MapLoader {
    * @param {SVGElement} svgElement - Élément SVG
    * @param {string} layerId - Identifiant de la couche
    */
- extractSvgElements(svgElement, layerId) {
+  extractSvgElements(svgElement, layerId) {
   if (!svgElement) return;
   
   // Désactiver les interactions sur le fond/zones transparentes
-  const background = svgElement.querySelector('#background');
-  if (background) {
-    background.style.pointerEvents = 'none';
+  try {
+    const background = svgElement.querySelector('#background');
+    if (background && background.style) {  // Vérifier que background.style existe
+      background.style.pointerEvents = 'none';
+    }
+  } catch (error) {
+    console.warn("Impossible de désactiver les interactions sur l'arrière-plan:", error);
   }
-    
+  
   // Extraire tous les éléments qui ont un ID
   const namedElements = svgElement.querySelectorAll('[id]');
   
@@ -208,14 +212,17 @@ class MapLoader {
     if (element.id.startsWith('inv_')) {
       // Éléments invisibles pour l'interaction: interactifs mais invisibles
       element.classList.add('interactive');
-      // On ne modifie pas le style directement car c'est géré par CSS
     } else if (element.parentNode && element.parentNode.id === 'GRues') {
       // Éléments de rues: visibles mais non interactifs
-      element.style.pointerEvents = 'none';
+      if (element.style) {  // Vérifier que element.style existe
+        element.style.pointerEvents = 'none';
+      }
     } else {
       // Autres éléments: visibles mais non interactifs pour éviter les doubles interactions
       element.classList.add('interactive');
-      element.style.pointerEvents = 'none';
+      if (element.style) {  // Vérifier que element.style existe
+        element.style.pointerEvents = 'none';
+      }
     }
     
     // Ajouter des événements pour l'interaction uniquement sur les éléments invisibles
@@ -247,16 +254,16 @@ class MapLoader {
     count: namedElements.length
   });
 }
-  
-  // Désactiver les interactions sur le fond/zones transparentes
-try {
-  const background = svgElement.querySelector('#background');
-  if (background) {
-    background.style.pointerEvents = 'none';
-  }
-} catch (error) {
-  console.warn("Impossible de désactiver les interactions sur l'arrière-plan:", error);
-}
+    
+    // Désactiver les interactions sur le fond/zones transparentes
+    try {
+      const background = svgElement.querySelector('#background');
+      if (background) {
+        background.style.pointerEvents = 'none';
+      }
+    } catch (error) {
+      console.warn("Impossible de désactiver les interactions sur l'arrière-plan:", error);
+    }
     
     // Extraire tous les éléments qui ont un ID
     const namedElements = svgElement.querySelectorAll('[id]');
@@ -271,27 +278,39 @@ try {
         layer: layerId
       };
       
-      // Ajouter la classe interactive pour le style
-      element.classList.add('interactive');
+      // Traiter différemment les éléments selon leur ID
+      if (element.id.startsWith('inv_')) {
+        // Éléments invisibles pour l'interaction: interactifs mais invisibles
+        element.classList.add('interactive');
+      } else if (element.parentNode && element.parentNode.id === 'GRues') {
+        // Éléments de rues: visibles mais non interactifs
+        element.style.pointerEvents = 'none';
+      } else {
+        // Autres éléments: visibles mais non interactifs pour éviter les doubles interactions
+        element.classList.add('interactive');
+        element.style.pointerEvents = 'none';
+      }
       
-      // Ajouter des événements pour l'interaction
-      element.addEventListener('click', (e) => {
-        EventBus.publish('map:element:click', {
-          elementId: element.id,
-          layerId: layerId,
-          type: element.tagName,
-          originalEvent: e
+      // Ajouter des événements pour l'interaction uniquement sur les éléments invisibles
+      if (element.id.startsWith('inv_')) {
+        element.addEventListener('click', (e) => {
+          EventBus.publish('map:element:click', {
+            elementId: element.id,
+            layerId: layerId,
+            type: element.tagName,
+            originalEvent: e
+          });
         });
-      });
 
-      element.addEventListener('mouseover', (e) => {
-        EventBus.publish('map:element:hover', {
-          elementId: element.id,
-          layerId: layerId,
-          type: element.tagName,
-          originalEvent: e
+        element.addEventListener('mouseover', (e) => {
+          EventBus.publish('map:element:hover', {
+            elementId: element.id,
+            layerId: layerId,
+            type: element.tagName,
+            originalEvent: e
+          });
         });
-      });
+      }
     });
     
     // Publier l'événement avec les éléments extraits
