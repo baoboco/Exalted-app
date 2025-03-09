@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Interactive de Nexus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/themes.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barre de navigation supérieure -->
+        <header class="top-nav">
+            <div class="logo">
+                <h1>Nexus - Carte Interactive</h1>
+            </div>
+            <div class="user-controls">
+                <div class="user-info">
+                    <span id="current-user-name">Invité</span>
+                    <span id="current-user-role">(Joueur)</span>
+                </div>
+                <button id="user-settings-btn">Paramètres</button>
+                <button id="help-btn">Aide</button>
+            </div>
+        </header>
+
+        <!-- Conteneur principal -->
+        <div class="main-container">
+            <!-- Barre d'outils latérale -->
+            <div class="sidebar">
+                <!-- Sélecteur de couches -->
+                <div class="sidebar-section">
+                    <h3>Couches</h3>
+                    <select id="layer-selector" class="full-width">
+                        <option value="main">Surface</option>
+                        <option value="underground">Souterrains</option>
+                    </select>
+                </div>
+
+                <!-- Outils d'interaction -->
+                <div class="sidebar-section">
+                    <h3>Outils</h3>
+                    <div id="tool-selector" class="tool-buttons">
+                        <button data-tool="marker" class="tool-btn">
+                            <span class="icon">📍</span>
+                            <span class="label">Marqueur</span>
+                        </button>
+                        <button data-tool="note" class="tool-btn">
+                            <span class="icon">📝</span>
+                            <span class="label">Note</span>
+                        </button>
+                        <button data-tool="select" class="tool-btn">
+                            <span class="icon">👆</span>
+                            <span class="label">Sélection</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section joueurs -->
+                <div class="sidebar-section">
+                    <h3>Joueurs</h3>
+                    <ul id="players-list" class="players-list">
+                        <!-- Les joueurs seront ajoutés dynamiquement -->
+                    </ul>
+                </div>
+
+                <!-- Section des événements (visible uniquement pour le MJ) -->
+                <div class="sidebar-section gm-only">
+                    <h3>Événements</h3>
+                    <div id="events-manager">
+                        <button id="create-event-btn">Créer un événement</button>
+                        <ul id="events-list" class="events-list">
+                            <!-- Les événements seront ajoutés dynamiquement -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Journal personnel -->
+                <div class="sidebar-section">
+                    <h3>Journal personnel</h3>
+                    <div id="personal-journal">
+                        <textarea id="journal-text" placeholder="Prendre des notes..."></textarea>
+                        <button id="save-journal-btn">Sauvegarder</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteneur de la carte -->
+            <div id="map-container" class="map-container"></div>
+
+            <!-- Panneau d'informations latéral (dynamique) -->
+            <div id="info-panel" class="info-panel">
+                <div class="info-panel-header">
+                    <h3 id="info-panel-title">Informations</h3>
+                    <button id="close-info-panel-btn">×</button>
+                </div>
+                <div id="info-panel-content" class="info-panel-content">
+                    <!-- Le contenu sera ajouté dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modales -->
+    <!-- Modal de création de marqueur -->
+    <div id="marker-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Créer un marqueur</h3>
+                <button class="close-modal-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="marker-form">
+                    <div class="form-group">
+                        <label for="marker-name">Nom du marqueur</label>
+                        <input type="text" id="marker-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="marker-icon">Icône</label>
+                        <div class="icon-selector">
+                            <select id="marker-icon">
+                                <option value="default" data-icon="#icon-default">Standard</option>
+                                <option value="quest" data-icon="#icon-quest">Quête</option>
+                                <option value="danger" data-icon="#icon-danger">Danger</option>
+                                <option value="npc" data-icon="#icon-npc">PNJ</option>
+                                <option value="shop" data-icon="#icon-shop">Boutique</option>
+                            </select>
+                            <div class="selected-icon-preview">
+                                <svg width="24" height="24"><use href="#icon-default"></use></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="marker-description">Description</label>
+                        <textarea id="marker-description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="marker-visibility">Visibilité</label>
+                        <select id="marker-visibility">
+                            <option value="public">Public</option>
+                            <option value="private">Privé</option>
+                            <option value="gm-only">MJ uniquement</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Sauvegarder</button>
+                        <button type="button" class="cancel-btn">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de création d'événement (MJ uniquement) -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Créer un événement</h3>
+                <button class="close-modal-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="event-form">
+                    <div class="form-group">
+                        <label for="event-name">Nom de l'événement</label>
+                        <input type="text" id="event-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-type">Type d'événement</label>
+                        <select id="event-type">
+                            <option value="fire">Incendie</option>
+                            <option value="flood">Inondation</option>
+                            <option value="collapse">Effondrement</option>
+                            <option value="battle">Bataille</option>
+                            <option value="festival">Festival</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-areas">Zones affectées</label>
+                        <div id="selected-areas" class="selected-items"></div>
+                        <p class="help-text">Cliquez sur la carte pour sélectionner des zones</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-description">Description</label>
+                        <textarea id="event-description"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Sauvegarder</button>
+                        <button type="button" class="cancel-btn">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal d'édition des notes -->
+    <div id="note-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Éditer la note</h3>
+                <button class="close-modal-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="note-form">
+                    <div class="form-group">
+                        <label for="note-content">Contenu de la note</label>
+                        <textarea id="note-content" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="note-visibility">Visibilité</label>
+                        <select id="note-visibility">
+                            <option value="public">Public</option>
+                            <option value="private">Privé</option>
+                            <option value="gm-only">MJ uniquement</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Sauvegarder</button>
+                        <button type="button" class="cancel-btn">Annuler</button>
+                        <button type="button" class="delete-btn">Supprimer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates pour les icônes SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="icon-default" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="#FF5722" stroke="#000" stroke-width="2"/>
+            <circle cx="12" cy="12" r="4" fill="#FFF"/>
+        </symbol>
+        <symbol id="icon-quest" viewBox="0 0 24 24">
+            <path d="M12 2L2 7v10l10 5 10-5V7L12 2z" fill="#FFC107" stroke="#000" stroke-width="2"/>
+            <text x="12" y="16" font-size="12" text-anchor="middle" fill="#000">!</text>
+        </symbol>
+        <symbol id="icon-danger" viewBox="0 0 24 24">
+            <path d="M1 21h22L12 2 1 21z" fill="#F44336" stroke="#000" stroke-width="2"/>
+            <text x="12" y="19" font-size="12" text-anchor="middle" fill="#FFF">!</text>
+        </symbol>
+        <symbol id="icon-npc" viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="6" fill="#2196F3" stroke="#000" stroke-width="2"/>
+            <path d="M6 21v-2a6 6 0 0 1 12 0v2" fill="#2196F3" stroke="#000" stroke-width="2"/>
+        </symbol>
+        <symbol id="icon-shop" viewBox="0 0 24 24">
+            <rect x="2" y="5" width="20" height="16" rx="2" fill="#4CAF50" stroke="#000" stroke-width="2"/>
+            <path d="M4 5V3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2" stroke="#000" stroke-width="2"/>
+            <rect x="8" y="12" width="8" height="8" fill="#FFF"/>
+        </symbol>
+    </svg>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="./js/core/eventBus.js"></script>
+    <script src="./js/core/userManager.js"></script>
+    <script src="./js/core/mapLoader.js"></script>
+    <script src="./js/core/layerManager.js"></script>
+    <script src="./js/core/interactionManager.js"></script>
+    <script src="./js/modules/markerTool.js"></script>
+    <script src="./js/modules/noteTool.js"></script>
+    <script src="./js/modules/eventManager.js"></script>
+    <script src="./js/modules/visibilityManager.js"></script>
+    <script src="./js/roles/gmTools.js"></script>
+    <script src="./js/roles/playerTools.js"></script>
+    <script src="./js/modules/authManager.js"></script>
+    <script src="./js/modules/playerProfile.js"></script>
+    <script src="./js/modules/themeManager.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/diagnostic.js"></script>
+    <script src="debug-quartiers.js"></script>
+</body>
+</html>
