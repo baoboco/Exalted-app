@@ -1,0 +1,232 @@
+# Guide d'utilisation de la Carte Interactive de Nexus
+
+## Introduction
+
+Bienvenue dans la **Carte Interactive de Nexus** ! Cette application web a été conçue pour enrichir vos parties de jeu de rôle dans l'univers d'Exalted en offrant une représentation visuelle et interactive de la ville de Nexus. Ce guide vous présentera toutes les fonctionnalités disponibles et vous aidera à tirer le meilleur parti de cet outil.
+
+## Table des matières
+1. [Présentation générale](#présentation-générale)
+2. [Interface utilisateur](#interface-utilisateur)
+3. [Mode Joueur vs Mode MJ](#mode-joueur-vs-mode-mj)
+4. [Navigation entre niveaux](#navigation-entre-niveaux)
+5. [Sous-cartes et lieux détaillés](#sous-cartes-et-lieux-détaillés)
+6. [Gestion des marqueurs](#gestion-des-marqueurs)
+7. [Système de notes](#système-de-notes)
+8. [Panneau d'administration](#panneau-dadministration)
+9. [Export et Import](#export-et-import)
+10. [Trucs et astuces](#trucs-et-astuces)
+
+## Présentation générale
+
+La Carte Interactive de Nexus est inspirée des cartes de jeux vidéo comme **Kingdom Come: Deliverance**. Elle offre:
+
+- Une **carte multi-niveaux** permettant d'explorer horizontalement et verticalement
+- Des **sous-cartes détaillées** pour les lieux importants (tavernes, temples...)
+- Un **système de marqueurs** pour identifier les lieux d'intérêt
+- Une **interface différenciée** pour les MJ et les joueurs
+- Un **système de notes** pour conserver des informations importantes
+- Des **outils d'administration** pour le MJ
+
+## Interface utilisateur
+
+![Interface principale](https://i.imgur.com/QMUVFst.png)
+
+L'interface principale se compose de:
+
+1. **Barre d'outils supérieure**:
+   - Logo "Nexus"
+   - Boutons d'outils centraux:
+     - Ajouter un marqueur
+     - Changer de niveau
+     - Notes
+     - Aide
+   - Indicateur de rôle (Joueur/MJ) et paramètres
+
+2. **Carte principale**: Zone d'affichage centrale de la carte
+
+3. **Sélecteur de niveaux**: S'ouvre en cliquant sur le bouton "Changer de niveau"
+
+4. **Fil d'Ariane**: Indique votre position actuelle dans la hiérarchie des cartes
+
+5. **Panneau latéral**: S'ouvre pour afficher des informations, des formulaires ou des notes
+
+## Mode Joueur vs Mode MJ
+
+### Changer de mode
+Pour passer du mode Joueur au mode MJ (ou inversement):
+1. Cliquez sur le bouton **Paramètres** (icône d'engrenage à côté de votre rôle)
+2. Confirmez le changement de rôle dans la boîte de dialogue
+
+### Différences principales:
+
+| Fonctionnalité | Mode Joueur | Mode MJ |
+|----------------|-------------|---------|
+| Voir tous les marqueurs | ❌ (uniquement ceux avec visibilité "tous") | ✅ |
+| Ajouter des marqueurs officiels | ❌ | ✅ |
+| Éditer/supprimer des marqueurs | ❌ (sauf les vôtres) | ✅ |
+| Accéder au panneau d'administration | ❌ | ✅ |
+| Voir tous les niveaux | ❌ (uniquement ceux rendus visibles) | ✅ |
+| Exporter/Importer des données | ❌ | ✅ |
+
+## Navigation entre niveaux
+
+La carte de Nexus est organisée en plusieurs niveaux:
+
+- **Niveau 0** - Surface de la ville
+- **Niveau -1** - Premier sous-sol (caves, cryptes)
+- **Niveau -2** - Égouts principaux
+- **Niveau -3** - Anciennes ruines
+
+Pour naviguer entre les niveaux:
+1. Cliquez sur le bouton **Changer de niveau** (icône de calques superposés)
+2. Sélectionnez le niveau souhaité dans le menu qui apparaît
+
+Astuce: Certains marqueurs servent de **connecteurs entre niveaux**. Cliquez sur ces marqueurs pour accéder directement au niveau correspondant.
+
+## Sous-cartes et lieux détaillés
+
+Les lieux importants possèdent leurs propres sous-cartes détaillées:
+
+- **Taverne du Dragon Ivre**
+- **Temple de la Lune**
+- (et d'autres que vous pouvez ajouter)
+
+Pour accéder à une sous-carte:
+1. Cliquez sur un marqueur qui ouvre une sous-carte
+2. Vous verrez apparaître le détail du lieu
+
+Pour revenir à la carte principale:
+- Cliquez sur le bouton **Retour à la carte** qui apparaît en haut à gauche
+- Ou utilisez le fil d'Ariane en cliquant sur "Nexus"
+
+## Gestion des marqueurs
+
+### Types de marqueurs
+L'application propose plusieurs types de marqueurs préexistants:
+- Taverne (marron) 🟤
+- Temple (or) 🟡
+- Commerce (vert) 🟢
+- Résidence (bleu) 🔵
+- Zone de danger (rouge) 🔴
+- Lieu secret (violet) 🟣
+- Et d'autres types spéciaux: Banque, Tour d'horloge, Hôpital, Labyrinthe
+
+### Ajouter un marqueur
+1. Cliquez sur le bouton **Ajouter un marqueur** dans la barre d'outils
+2. Cliquez sur la carte pour choisir l'emplacement
+3. Remplissez le formulaire:
+   - Nom du marqueur
+   - Type de marqueur
+   - Description
+   - Type d'interaction (popup d'information ou ouverture d'une sous-carte)
+   - Cochez "Connecteur entre niveaux" si c'est un passage vers un autre niveau
+4. Cliquez sur **Ajouter**
+
+### Interagir avec un marqueur
+- Cliquez sur un marqueur pour afficher sa popup d'information
+- Certains marqueurs ouvriront directement une sous-carte
+- En tant que MJ, vous pouvez modifier ou supprimer un marqueur depuis sa popup
+
+### Visibilité des marqueurs
+En tant que MJ, vous pouvez définir la visibilité d'un marqueur:
+- **Tous**: Visible par tous les joueurs
+- **MJ uniquement**: Visible seulement par vous
+- **Joueurs spécifiques**: Visible par certains joueurs choisis
+- **Selon condition**: Visibilité conditionnelle (fonctionnalité avancée)
+
+## Système de notes
+
+Le système de notes vous permet de conserver des informations importantes liées à la campagne.
+
+### Types de notes
+- **Note personnelle**: Visible uniquement par vous
+- **Note de groupe**: Visible par tout le groupe
+- **Indice**: Information importante pour l'intrigue
+- **Événement**: Événement important à noter
+
+### Créer une note
+1. Cliquez sur le bouton **Notes** dans la barre d'outils
+2. Cliquez sur **Nouvelle note**
+3. Remplissez le formulaire:
+   - Titre
+   - Type de note
+   - Contenu
+   - Options de partage
+   - Association à une position sur la carte (optionnel)
+4. Cliquez sur **Sauvegarder**
+
+### Gérer les notes
+- Utilisez les filtres pour trier vos notes par type ou visibilité
+- Cliquez sur une note pour voir son contenu détaillé
+- Les notes peuvent être modifiées ou supprimées depuis leur vue détaillée
+- Si une note est associée à une position, vous pouvez cliquer sur **Voir sur la carte** pour y accéder directement
+
+## Panneau d'administration
+
+Le panneau d'administration est réservé aux MJ et permet de configurer en profondeur l'application.
+
+Pour y accéder:
+1. Assurez-vous d'être en mode MJ
+2. Cliquez sur le bouton **Administration** (icône d'engrenages) dans la barre d'outils
+
+### Sections principales
+
+#### Types de marqueurs
+- Créer de nouveaux types de marqueurs personnalisés
+- Définir leurs couleurs, icônes et comportements par défaut
+
+#### Cartes et niveaux
+- Ajouter, modifier ou supprimer des niveaux
+- Configurer les sous-cartes disponibles
+
+#### Effets environnementaux
+- Cette fonctionnalité sera disponible dans une version future
+
+### Utilisation recommandée
+- Configurez d'abord vos types de marqueurs personnalisés
+- Ajoutez ensuite vos niveaux et sous-cartes
+- Revenez à la carte principale pour ajouter vos marqueurs
+
+## Export et Import
+
+En tant que MJ, vous pouvez exporter et importer les données de la carte.
+
+### Exporter les données
+1. Cliquez sur le bouton **Export/Import** (en mode MJ)
+2. Dans l'onglet "Export", sélectionnez les données à exporter
+3. Cliquez sur **Exporter les données**
+4. Sauvegardez le fichier JSON généré
+
+### Importer des données
+1. Cliquez sur le bouton **Export/Import** (en mode MJ)
+2. Dans l'onglet "Import", sélectionnez un fichier JSON précédemment exporté
+3. Choisissez le mode d'import (fusion ou remplacement)
+4. Sélectionnez les types de données à importer
+5. Cliquez sur **Importer les données**
+
+Utilisez cette fonctionnalité pour:
+- Sauvegarder l'état de votre carte
+- Transférer la configuration entre différents appareils
+- Partager votre carte avec d'autres MJ
+
+## Trucs et astuces
+
+### Pour les MJ
+- **Préparation avant la partie**: Configurez vos niveaux, sous-cartes et types de marqueurs à l'avance
+- **Marqueurs secrets**: Utilisez la visibilité "MJ uniquement" pour placer des indices que vous révélerez plus tard
+- **Contrôle de l'information**: Rendez certains niveaux invisibles aux joueurs jusqu'à ce qu'ils les découvrent
+- **Sauvegarde régulière**: Exportez régulièrement vos données pour éviter toute perte
+- **Sous-cartes stratégiques**: Créez des sous-cartes pour les lieux clés de votre intrigue
+
+### Pour les joueurs
+- **Notes personnelles**: Utilisez le système de notes pour garder trace de vos découvertes
+- **Navigation efficace**: Utilisez le fil d'Ariane pour naviguer rapidement entre les cartes
+- **Marqueurs personnels**: Placez vos propres marqueurs pour les points d'intérêt personnels
+
+---
+
+## Conclusion
+
+La Carte Interactive de Nexus est un outil puissant qui rendra vos parties dans l'univers d'Exalted plus immersives et visuelles. N'hésitez pas à explorer toutes ses fonctionnalités pour créer une expérience unique pour votre groupe de jeu.
+
+Bon jeu à Nexus !
